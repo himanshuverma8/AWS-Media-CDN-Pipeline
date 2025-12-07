@@ -8,6 +8,13 @@
       "when": 1764453604766,
       "tag": "0000_flowery_black_crow",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1765123434653,
+      "tag": "0001_chilly_hellcat",
+      "breakpoints": true
     }
   ]
 }
