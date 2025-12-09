@@ -2,7 +2,7 @@ import { drizzle } from 'drizzle-orm/neon-http';
 import { neon } from '@neondatabase/serverless';
 import {eq, and, desc} from "drizzle-orm";
 import { randomBytes } from 'crypto';
-import { users, userFiles, type User, type UserFile, DbUser } from './schema'
+import { users, userFiles, type UserFile, DbUser } from './schema'
 
 //create drizzle db instance
 const sql = neon(process.env.DATABASE_URL!);
@@ -83,7 +83,7 @@ export async function getApiCredentials(userId: string): Promise<{apiKey: string
         .where(eq(users.id, userId))
         .limit(1);
 
-    return result[0] || null;
+    return result[0] || { apiKey: null, apiSecret: null };
 }
 //revoke api credentials
 export async function revokeApiCredentials(userId: string): Promise<void> {
@@ -104,7 +104,7 @@ export async function createUserFile(fileData: Omit<UserFile, 'id' | 'uploadedAt
         fileName: fileData.fileName,
         fileType: fileData.fileType,
         folder: fileData.folder,
-        size: BigInt(fileData.size),
+        size: fileData.size,
         mimeType: fileData.mimeType,
         metadata: fileData.metadata
     }).returning();
@@ -116,15 +116,11 @@ export async function createUserFile(fileData: Omit<UserFile, 'id' | 'uploadedAt
 }
 
 export async function getUserFiles(userId: string, folder?: string): Promise<UserFile[]> {
-    let query = db.select().from(userFiles);
+    const query = db.select().from(userFiles);
 
-    if(folder){
-        query = query.where(and(eq(userFiles.userId, userId), eq(userFiles.folder, folder)));
-    } else {
-        query = query.where(eq(userFiles.userId, userId));
-    }
-
-    const result = await query.orderBy(desc(userFiles.uploadedAt));
+    const result = folder
+        ? await query.where(and(eq(userFiles.userId, userId), eq(userFiles.folder, folder))).orderBy(desc(userFiles.uploadedAt))
+        : await query.where(eq(userFiles.userId, userId)).orderBy(desc(userFiles.uploadedAt));
 
     return result.map(file => ({
         ...file,
@@ -142,5 +138,4 @@ export async function deleteUserFile(fileId: string, userId: string): Promise<bo
 
 // export types
 export type { UserFile };
-export type { User };
 
