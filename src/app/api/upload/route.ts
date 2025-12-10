@@ -1,46 +1,68 @@
-import { NextRequest, NextResponse } from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { s3Client, BUCKET_NAME, generateCDNUrl } from '@/lib/aws-config';
-import { validateAuth } from '@/lib/auth-utils';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { getOrCreateUser, createUserFile } from '@/lib/db';
+import { error } from 'console';
 
-export async function POST(request: NextRequest) {
-  // Validate authentication
-  const authResult = await validateAuth();
-  if (!authResult.isAuthenticated) {
-    return NextResponse.json({ error: authResult.error }, { status: 401 });
+export async function POST(request: NextRequest){
+  const session = await getServerSession(authOptions);
+  if(!session?.user?.email){
+    return NextResponse.json({ error: 'Unauthorized'}, {status: 401});
   }
 
   try {
+    //get the user from db or create the user
+    const user = await getOrCreateUser(
+      session.user.email,
+      session.user.name || 'User'
+    );
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const folder = formData.get('folder') as string;
-    const type = formData.get('type') as string; // 'image' or 'file'
+    const type = formData.get('type') as string;
 
-    if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    if(!file) {
+      return NextResponse.json({ error: 'No file provided'}, {status: 400})
     }
 
-    // Determine the base path based on file type
+    //User-specific path: users/{userId}/images/ or users/{userId}/files/
     const basePath = type === 'image' ? 'images' : 'files';
-    // Only add folder to path if it's not empty
+    const userPrefix = `users/${user.id}/${basePath}`;
     const filePath = folder && folder.trim() ? `${folder}/${file.name}` : file.name;
-    const key = `${basePath}/${filePath}`;
+    const key = `${userPrefix}/${filePath}`;
 
-    // Convert file to buffer
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    // Upload to S3
+    //upload it to S3
     const command = new PutObjectCommand({
       Bucket: BUCKET_NAME,
       Key: key,
       Body: buffer,
       ContentType: file.type,
+      Metadata: {
+        userId: user?.id,
+        uploadedAt: new Date().toISOString(),
+      }
     });
 
     await s3Client.send(command);
 
-    // Generate CDN URL
-    const cdnUrl = generateCDNUrl(filePath, type === 'image');
+    //save file record
+    await createUserFile({
+      userId: user?.id,
+      s3Key: key,
+      fileName: file.name,
+      fileType: type === 'image' ? 'image' : 'file',
+      folder: folder || '',
+      size: file.size,
+      mimeType: file.type
+    })
+
+    //generate the cdn url
+    const cdnUrl = generateCDNUrl(`${user.id}/${filePath}`, type === 'image');
 
     return NextResponse.json({
       success: true,
@@ -49,10 +71,7 @@ export async function POST(request: NextRequest) {
       fileName: file.name,
     });
   } catch (error) {
-    console.error('Upload error:', error);
-    return NextResponse.json(
-      { error: 'Failed to upload file' },
-      { status: 500 }
-    );
+    console.error('Upload error:' error);
+    return NextResponse.json({error: 'Failed to upload file'}, {status: 500})
   }
 }
