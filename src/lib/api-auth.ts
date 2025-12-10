@@ -38,3 +38,5 @@ export async function verifyApiAuth(request: NextRequest): Promise<ApiAuthResult
     }
     return await verifyApiKey(apiKey);
 }
+
+
