@@ -27,7 +27,7 @@ export const userFiles = pgTable('user_files', {
     mimeType: varchar('mime_type', {length: 100}),
     uploadedAt: timestamp('uploaded_at').defaultNow().notNull(),
     metadata: jsonb('metadata').$type<{
-        widht?: number,
+        width?: number,
         height?: number,
         format?: string
     }>(),
