@@ -14,7 +14,7 @@ export default function AuthButton() {
   const [ripple, setRipple] = useState<{ x: number; y: number } | null>(null);
   
   const isLoading = status === 'loading';
-  const isAuthenticated = !!session?.user && session.user.email === 'hvinprimary@gmail.com';
+  const isAuthenticated = !!session?.user && !!session.user.email;
   const user = isAuthenticated ? session.user : null;
 
   const createRipple = (event: React.MouseEvent<HTMLButtonElement>) => {
