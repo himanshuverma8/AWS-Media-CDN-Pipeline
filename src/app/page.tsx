@@ -1,18 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { Image as ImageIcon, FileText, Settings } from 'lucide-react';
+import { Image as ImageIcon, FileText, Settings, Key } from 'lucide-react';
 import FileManager from '@/components/FileManager';
 import AuthButton from '@/components/AuthButton';
 import AnimatedLightningLogo from '@/components/AnimatedLightningLogo';
+import ApiKeyModal from '@/components/ApiKeyModal';
 import { useSession } from 'next-auth/react';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'images' | 'files'>('images');
+  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
   const { data: session, status } = useSession();
   
   const isLoading = status === 'loading';
-  const isAuthenticated = !!session?.user && session.user.email === 'hvinprimary@gmail.com';
+  const isAuthenticated = !!session?.user && !!session.user.email;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-blue-900 dark:to-indigo-900 transition-all duration-500 relative overflow-hidden">
@@ -43,6 +45,16 @@ export default function Home() {
                 <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline">cdn.hv6.dev</span>
                 <span className="text-xs font-medium text-gray-700 dark:text-gray-200 sm:hidden">CDN</span>
               </div>
+              {isAuthenticated && (
+                <button
+                  onClick={() => setIsApiKeyModalOpen(true)}
+                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-xl border border-white/30 dark:border-gray-700/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors"
+                  title="Manage API Keys"
+                >
+                  <Key className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-300" />
+                  <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline">API Keys</span>
+                </button>
+              )}
               {!isAuthenticated && (
                 <div className="flex items-center space-x-2 px-3 py-2 bg-yellow-500/20 dark:bg-yellow-600/20 backdrop-blur-md rounded-xl border border-yellow-400/30 dark:border-yellow-500/30">
                   <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
@@ -164,6 +176,12 @@ export default function Home() {
                   </div>
                 </div>
       </footer>
+
+      {/* API Key Management Modal */}
+      <ApiKeyModal 
+        isOpen={isApiKeyModalOpen} 
+        onClose={() => setIsApiKeyModalOpen(false)} 
+      />
     </div>
   );
 }
