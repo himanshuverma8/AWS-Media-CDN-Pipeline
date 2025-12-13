@@ -1,16 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CopyObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { s3Client, BUCKET_NAME, generateCDNUrl } from '@/lib/aws-config';
-import { validateAuth } from '@/lib/auth-utils';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { getOrCreateUser, updateUserFileS3Key } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   // Validate authentication
-  const authResult = await validateAuth();
-  if (!authResult.isAuthenticated) {
-    return NextResponse.json({ error: authResult.error }, { status: 401 });
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
+    const user = await getOrCreateUser(
+      session.user.email,
+      session.user.name || 'User'
+    );
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Failed to get or create user' },
+        { status: 500 }
+      );
+    }
+
     const { oldKey, newName, type } = await request.json();
 
     if (!oldKey || !newName) {
@@ -40,6 +54,9 @@ export async function POST(request: NextRequest) {
     });
 
     await s3Client.send(deleteCommand);
+
+    // Update database record
+    await updateUserFileS3Key(oldKey, newKey, newName, user.id);
 
     // Generate new CDN URL
     const basePath = type === 'image' ? 'images' : 'files';
