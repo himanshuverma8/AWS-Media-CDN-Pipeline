@@ -11,13 +11,7 @@ export async function validateAuth() {
     };
   }
 
-  if (session.user.email !== 'hvinprimary@gmail.com') {
-    return {
-      isAuthenticated: false,
-      error: 'Unauthorized access. Only hvinprimary@gmail.com is allowed.'
-    };
-  }
-
+  // Allow all authenticated users
   return {
     isAuthenticated: true,
     user: session.user
@@ -27,8 +21,8 @@ export async function validateAuth() {
 export async function validateReadOnlyAuth() {
   const session = await getServerSession(authOptions);
   
-  // Allow read access for everyone, but only write access for authorized user
-  if (session?.user?.email === 'hvinprimary@gmail.com') {
+  // Allow read and write access for all authenticated users
+  if (session?.user?.email) {
     return {
       isAuthenticated: true,
       user: session.user,
