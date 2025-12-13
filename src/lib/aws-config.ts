@@ -2,7 +2,7 @@ import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 //aws configuration
-export const s3Client = new s3Client({
+export const s3Client = new S3Client({
     region: process.env.AWS_REGION || 'us-east-1',
     credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
