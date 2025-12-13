@@ -10,8 +10,8 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
-      // Only allow specific email
-      if (user.email === "hvinprimary@gmail.com") {
+      // Allow all authenticated Google users
+      if (user.email) {
         return true
       }
       return false
