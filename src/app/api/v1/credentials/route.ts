@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCredentials
-} from "@/lib/db";
+ } from "@/lib/db";
 
  //get api credentials 
  export async function GET(request: NextRequest) {
