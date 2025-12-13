@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse} from 'next/server';
 import { verifyApiAuth } from '@/lib/api-auth';
 import { generatePresignedUrl } from '@/lib/aws-config';
-import { error } from 'console';
 
 export async function GET(request: NextRequest) {
     const authResult = await verifyApiAuth(request);
