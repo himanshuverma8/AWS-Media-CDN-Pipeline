@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [status]);
 
-  const isAuthenticated = !!session?.user && session.user.email === 'hvinprimary@gmail.com';
+  const isAuthenticated = !!session?.user && !!session.user.email;
 
   const login = () => {
     signIn('google', { callbackUrl: '/' });
