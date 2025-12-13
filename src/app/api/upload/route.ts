@@ -4,7 +4,6 @@ import { s3Client, BUCKET_NAME, generateCDNUrl } from '@/lib/aws-config';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { getOrCreateUser, createUserFile } from '@/lib/db';
-import { error } from 'console';
 
 export async function POST(request: NextRequest){
   const session = await getServerSession(authOptions);
@@ -18,6 +17,13 @@ export async function POST(request: NextRequest){
       session.user.email,
       session.user.name || 'User'
     );
+
+    if (!user) {
+      return NextResponse.json(
+        {error: 'Failed to get or create user'},
+        {status: 500}
+      );
+    }
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
@@ -43,7 +49,7 @@ export async function POST(request: NextRequest){
       Body: buffer,
       ContentType: file.type,
       Metadata: {
-        userId: user?.id,
+        userId: user.id,
         uploadedAt: new Date().toISOString(),
       }
     });
@@ -52,13 +58,14 @@ export async function POST(request: NextRequest){
 
     //save file record
     await createUserFile({
-      userId: user?.id,
+      userId: user.id,
       s3Key: key,
       fileName: file.name,
       fileType: type === 'image' ? 'image' : 'file',
       folder: folder || '',
       size: file.size,
-      mimeType: file.type
+      mimeType: file.type,
+      metadata: null
     })
 
     //generate the cdn url
@@ -71,7 +78,7 @@ export async function POST(request: NextRequest){
       fileName: file.name,
     });
   } catch (error) {
-    console.error('Upload error:' error);
+    console.error('Upload error:', error);
     return NextResponse.json({error: 'Failed to upload file'}, {status: 500})
   }
 }
