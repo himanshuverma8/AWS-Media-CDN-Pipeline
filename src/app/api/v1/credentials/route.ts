@@ -5,7 +5,7 @@ import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCr
  } from "@/lib/db";
 
  //get api credentials 
- export async function GET(request: NextRequest) {
+ export async function GET(_request: NextRequest) {
     const session = await getServerSession(authOptions);
     if(!session?.user?.email) {
         return NextResponse.json({error: 'Unauthorized'}, {status: 401});
@@ -31,7 +31,7 @@ import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCr
             apiKey: credentials?.apiKey || null,
             hasSecret: !!credentials?.apiSecret
         })
-    } catch (error) {
+    } catch (_error) {
         return NextResponse.json(
             {error: 'Failed to get credentials'},
             {status: 500}
@@ -40,7 +40,7 @@ import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCr
  }
 
  //post generate new api credentials
- export async function POST(request:NextRequest) {
+ export async function POST(_request: NextRequest) {
     const session = await getServerSession(authOptions);
     if(!session?.user?.email) {
         return NextResponse.json({error: 'Unauthorized'}, {status: 401});
@@ -68,7 +68,7 @@ import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCr
             apiSecret,
             message: 'Save your api secret securely. It will not be shown again.',
         });
-    } catch (error) {
+    } catch (_error) {
         return NextResponse.json(
             {error: 'Failed to generate credentials'},
             {status: 500}
@@ -77,7 +77,7 @@ import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCr
  }
 
  //delete -> revoke api credentials
- export async function DELETE(request: NextRequest) {
+ export async function DELETE(_request: NextRequest) {
     const session = await getServerSession(authOptions);
     if(!session?.user?.email){
         return NextResponse.json({error: 'Unauthorized'}, {status: 401});
@@ -102,7 +102,7 @@ import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCr
             success: true,
             message: 'API credentials revoked successfully',
         }); 
-    } catch (error) {
+    } catch (_error) {
         return NextResponse.json(
             {error: 'Failed to revoke credentials'},
             {status: 500}
