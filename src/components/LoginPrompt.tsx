@@ -30,15 +30,15 @@ export default function LoginPrompt() {
             </p>
           </div>
 
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/30 rounded-xl p-4 w-full">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700/30 rounded-xl p-4 w-full">
             <div className="flex items-start space-x-3">
-              <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
               <div className="text-left">
-                <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                  Authorized Email Only
+                <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                  Google Authentication Required
                 </p>
-                <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
-                  Only hvinprimary@gmail.com can access file operations
+                <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                  Sign in with your Google account to access file operations
                 </p>
               </div>
             </div>
