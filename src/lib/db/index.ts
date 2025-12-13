@@ -2,7 +2,7 @@ import { drizzle } from 'drizzle-orm/neon-http';
 import { neon } from '@neondatabase/serverless';
 import {eq, and, desc} from "drizzle-orm";
 import { randomBytes } from 'crypto';
-import { users, userFiles, type UserFile, DbUser } from './schema'
+import { users, userFiles, type UserFile, DbUser } from './schema';
 
 //create drizzle db instance
 const sql = neon(process.env.DATABASE_URL!);
@@ -131,6 +131,26 @@ export async function getUserFiles(userId: string, folder?: string): Promise<Use
 export async function deleteUserFile(fileId: string, userId: string): Promise<boolean> {
     const result = await db.delete(userFiles)
         .where(and(eq(userFiles.id, fileId), eq(userFiles.userId, userId)))
+        .returning();
+
+    return result.length > 0;
+}
+
+export async function deleteUserFileByS3Key(s3Key: string, userId: string): Promise<boolean> {
+    const result = await db.delete(userFiles)
+        .where(and(eq(userFiles.s3Key, s3Key), eq(userFiles.userId, userId)))
+        .returning();
+
+    return result.length > 0;
+}
+
+export async function updateUserFileS3Key(oldS3Key: string, newS3Key: string, newFileName: string, userId: string): Promise<boolean> {
+    const result = await db.update(userFiles)
+        .set({
+            s3Key: newS3Key,
+            fileName: newFileName,
+        })
+        .where(and(eq(userFiles.s3Key, oldS3Key), eq(userFiles.userId, userId)))
         .returning();
 
     return result.length > 0;
