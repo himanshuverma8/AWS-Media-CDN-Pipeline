@@ -4,7 +4,6 @@ import { s3Client, BUCKET_NAME, generateCDNUrl} from '@/lib/aws-config';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { getOrCreateUser } from '@/lib/db';
-import { error } from 'console';
 
 export async function GET(request: NextRequest){
   const session = await getServerSession(authOptions);
@@ -18,14 +17,21 @@ export async function GET(request: NextRequest){
       session.user.name || 'User'
     );
 
+    if (!user) {
+      return NextResponse.json(
+        {error: 'Failed to get or create user'},
+        {status: 500}
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type') || 'file';
     const prefix = searchParams.get('prefix') || '';
 
-    const basePath = type === 'image' ? 'image' : 'files';
+    const basePath = type === 'image' ? 'images' : 'files';
     const userPrefix = `users/${user.id}/${basePath}`;
     const cleanPrefix = prefix && prefix.trim() ? prefix.replace(/^\/+|\/+$/g, '') : '';
-    const fullPrefix = cleanPrefix ? `${userPrefix}/${cleanPrefix}/` : `${userPrefix}`;
+    const fullPrefix = cleanPrefix ? `${userPrefix}/${cleanPrefix}/` : `${userPrefix}/`;
 
     const command = new ListObjectsV2Command({
       Bucket: BUCKET_NAME,
@@ -35,8 +41,24 @@ export async function GET(request: NextRequest){
 
     const response = await s3Client.send(command);
 
+    // 📁 Log S3 response for debugging
+    console.log('========== S3 LIST FILES DEBUG ==========');
+    console.log('User ID:', user.id);
+    console.log('User Email:', session.user.email);
+    console.log('Type:', type);
+    console.log('Base Path:', basePath);
+    console.log('User Prefix:', userPrefix);
+    console.log('Full Prefix:', fullPrefix);
+    console.log('Bucket:', BUCKET_NAME);
+    console.log('-------------------------------------------');
+    console.log('S3 Response - CommonPrefixes (Folders):', JSON.stringify(response.CommonPrefixes, null, 2));
+    console.log('S3 Response - Contents (Files):', JSON.stringify(response.Contents, null, 2));
+    console.log('S3 Response - KeyCount:', response.KeyCount);
+    console.log('==========================================');
+
     const folders = (response.CommonPrefixes || [])
       .map(prefix => {
+        const folderName = prefix.Prefix?.replace(fullPrefix, '').replace(/\/$/, '') || '';
         return {
           name: folderName,
           type: 'folder',
@@ -49,7 +71,8 @@ export async function GET(request: NextRequest){
     .filter(obj => obj.Key && !obj.Key.endsWith('/') && obj.Key !== fullPrefix)
     .map(obj => {
       const fileName = obj.Key?.replace(fullPrefix, '') || '';
-      const filePath = obj.Key?.replace(`${userPrefix}`, '') || '';
+      const filePath = obj.Key?.replace(`${userPrefix}`, '').slice(1) || '';
+      console.log(filePath);
       return {
         name: fileName,
         type: 'file',
@@ -60,6 +83,12 @@ export async function GET(request: NextRequest){
       };
     });
     
+    // 📁 Log processed files and folders
+    console.log('-------------------------------------------');
+    console.log('Processed Folders:', JSON.stringify(folders, null, 2));
+    console.log('Processed Files:', JSON.stringify(files, null, 2));
+    console.log('==========================================\n');
+
     return NextResponse.json({
       success: true,
       folders,
