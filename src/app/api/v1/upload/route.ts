@@ -2,7 +2,8 @@ import { NextRequest, NextResponse} from 'next/server';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { s3Client, BUCKET_NAME, generateCDNUrl} from '@/lib/aws-config';
 import { verifyApiAuth } from '@/lib/api-auth';
-import { createUserFile } from '@/lib/db';
+import { checkStorageLimits, createUserFile } from '@/lib/db';
+import { error } from 'console';
 
 export async function POST(request: NextRequest) {
     //verify api key
@@ -23,6 +24,23 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({error: 'No File Provided'}, {status: 400});
         }
 
+        //check before file upload
+        const storageCheck = await checkStorageLimits(user.id, file.size);
+        
+        if(!storageCheck.allowed){
+            return NextResponse.json(
+                {
+                    error: storageCheck.reason || 'Storage limit exceeded',
+                    storageInfo: {
+                        userStorageUsed: storageCheck.userStorageUsed,
+                        userStorageLimit: storageCheck.userStorageLimit,
+                        globalStorageUsed: storageCheck.globalStorageUsed,
+                        globalStorageLimit: storageCheck.globalStorageLimit,
+                    }
+                },
+                {status : 413}
+            );
+        }
         //user specific path
         const basePath = type === 'image' ? 'images' : 'files';
         const userPrefix = `users/${user.id}/${basePath}`;
