@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, timestamp, bigint, jsonb, index } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, timestamp, bigint, integer, jsonb, index, primaryKey } from 'drizzle-orm/pg-core';
 
 //User Table
 export const users = pgTable('users', {
@@ -27,7 +27,7 @@ export const userFiles = pgTable('user_files', {
     mimeType: varchar('mime_type', {length: 100}),
     uploadedAt: timestamp('uploaded_at').defaultNow().notNull(),
     metadata: jsonb('metadata').$type<{
-        width?: number,
+        widht?: number,
         height?: number,
         format?: string
     }>(),
@@ -37,7 +37,7 @@ export const userFiles = pgTable('user_files', {
 }))
 
 //Type exports
-export type DbUser = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferSelect;
 export type UserFile = typeof userFiles.$inferSelect;
 export type NewUserFile = typeof userFiles.$inferSelect;

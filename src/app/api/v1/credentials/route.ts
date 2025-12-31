@@ -3,9 +3,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCredentials
  } from "@/lib/db";
+import { error } from "console";
 
  //get api credentials 
- export async function GET(_request: NextRequest) {
+ export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions);
     if(!session?.user?.email) {
         return NextResponse.json({error: 'Unauthorized'}, {status: 401});
@@ -16,13 +17,6 @@ import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCr
             session.user.email,
             session.user.name || 'User'
         );
-
-        if (!user) {
-            return NextResponse.json(
-                {error: 'Failed to get or create user'},
-                {status: 500}
-            );
-        }
 
         const credentials = await getApiCredentials(user.id);
 
@@ -31,16 +25,16 @@ import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCr
             apiKey: credentials?.apiKey || null,
             hasSecret: !!credentials?.apiSecret
         })
-    } catch (_error) {
+    } catch (error) {
         return NextResponse.json(
-            {error: 'Failed to get credentials'},
+            {error: 'Fialed to get credentials'},
             {status: 500}
         );
     }
  }
 
  //post generate new api credentials
- export async function POST(_request: NextRequest) {
+ export async function POST(request:NextRequest) {
     const session = await getServerSession(authOptions);
     if(!session?.user?.email) {
         return NextResponse.json({error: 'Unauthorized'}, {status: 401});
@@ -50,14 +44,7 @@ import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCr
         const user = await getOrCreateUser(
             session.user.email,
             session.user.name || 'User'
-        );
-
-        if (!user) {
-            return NextResponse.json(
-                {error: 'Failed to get or create user'},
-                {status: 500}
-            );
-        }
+        )
 
         const { apiKey, apiSecret} = await generateApiCredentials(user.id);
 
@@ -68,7 +55,7 @@ import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCr
             apiSecret,
             message: 'Save your api secret securely. It will not be shown again.',
         });
-    } catch (_error) {
+    } catch (error) {
         return NextResponse.json(
             {error: 'Failed to generate credentials'},
             {status: 500}
@@ -77,24 +64,17 @@ import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCr
  }
 
  //delete -> revoke api credentials
- export async function DELETE(_request: NextRequest) {
+ export async function DELETE(request: NextRequest) {
     const session = await getServerSession(authOptions);
     if(!session?.user?.email){
         return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
     try {
-        const user = await getOrCreateUser(
+        const user = getOrCreateUser(
             session.user.email,
             session.user.name || 'User'
         );
-
-        if (!user) {
-            return NextResponse.json(
-                {error: 'Failed to get or create user'},
-                {status: 500}
-            );
-        }
 
         await revokeApiCredentials(user.id);
 
@@ -102,7 +82,7 @@ import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCr
             success: true,
             message: 'API credentials revoked successfully',
         }); 
-    } catch (_error) {
+    } catch (error) {
         return NextResponse.json(
             {error: 'Failed to revoke credentials'},
             {status: 500}

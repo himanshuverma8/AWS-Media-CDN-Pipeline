@@ -13,6 +13,7 @@ import {
 import FileActionsDropdown from './FileActionsDropdown';
 import FileDetailsModal from './FileDetailsModal';
 import RenameModal from './RenameModal';
+import StorageLimitErrorModal from './StorageLimitErrorModal';
 
 interface FileItem {
   name: string;
@@ -41,6 +42,14 @@ export default function FileManager({ type, isReadOnly = false }: FileManagerPro
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
+  const [showStorageErrorModal, setShowStorageErrorModal] = useState(false);
+  const [storageError, setStorageError] = useState<string>('');
+  const [storageInfo, setStorageInfo] = useState<{
+    userStorageUsed?: number;
+    userStorageLimit?: number;
+    globalStorageUsed?: number;
+    globalStorageLimit?: number;
+  } | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadFiles = useCallback(async () => {
@@ -123,8 +132,16 @@ export default function FileManager({ type, isReadOnly = false }: FileManagerPro
 
         const result = await response.json();
 
-        if (result.success) {
+        if (response.status === 413) {
+          // Storage limit exceeded
+          setStorageError(result.error || 'Storage limit exceeded');
+          setStorageInfo(result.storageInfo);
+          setShowStorageErrorModal(true);
+          break; // Stop processing remaining files
+        } else if (result.success) {
           loadFiles();
+        } else {
+          console.error('Upload failed:', result.error);
         }
       }
     } catch (error) {
@@ -579,6 +596,18 @@ export default function FileManager({ type, isReadOnly = false }: FileManagerPro
           type={type === 'images' ? 'image' : 'file'}
         />
       )}
+
+      {/* Storage Limit Error Modal */}
+      <StorageLimitErrorModal
+        isOpen={showStorageErrorModal}
+        onClose={() => {
+          setShowStorageErrorModal(false);
+          setStorageError('');
+          setStorageInfo(undefined);
+        }}
+        error={storageError}
+        storageInfo={storageInfo}
+      />
     </div>
   );
 }

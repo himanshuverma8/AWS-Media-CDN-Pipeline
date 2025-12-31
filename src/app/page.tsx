@@ -1,15 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import { Image as ImageIcon, FileText, Settings, Key } from 'lucide-react';
+import Link from 'next/link';
+import { Image as ImageIcon, FileText, Settings, Key, Book } from 'lucide-react';
 import FileManager from '@/components/FileManager';
 import AuthButton from '@/components/AuthButton';
 import AnimatedLightningLogo from '@/components/AnimatedLightningLogo';
+import SettingsModal from '@/components/SettingsModal';
 import ApiKeyModal from '@/components/ApiKeyModal';
+import OnboardingPrompt from '@/components/OnboardingPrompt';
 import { useSession } from 'next-auth/react';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'images' | 'files'>('images');
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
   const { data: session, status } = useSession();
   
@@ -40,31 +44,33 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-              <div className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1.5 sm:py-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-xl sm:rounded-2xl border border-white/30 dark:border-gray-700/30">
-                <Settings className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-300" />
-                <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline">cdn.hv6.dev</span>
-                <span className="text-xs font-medium text-gray-700 dark:text-gray-200 sm:hidden">CDN</span>
-              </div>
+              <Link
+                href="/docs"
+                className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-xl border border-white/30 dark:border-gray-700/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors"
+                title="API Documentation"
+              >
+                <Book className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-300" />
+                <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline">Docs</span>
+              </Link>
               {isAuthenticated && (
-                <button
-                  onClick={() => setIsApiKeyModalOpen(true)}
-                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-xl border border-white/30 dark:border-gray-700/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors"
-                  title="Manage API Keys"
-                >
-                  <Key className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-300" />
-                  <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline">API Keys</span>
-                </button>
-              )}
-              {!isAuthenticated && (
-                <div className="flex items-center space-x-2 px-3 py-2 bg-yellow-500/20 dark:bg-yellow-600/20 backdrop-blur-md rounded-xl border border-yellow-400/30 dark:border-yellow-500/30">
-                  <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs font-medium text-yellow-700 dark:text-yellow-300 hidden sm:inline">
-                    Read Only Access
-                  </span>
-                  <span className="text-xs font-medium text-yellow-700 dark:text-yellow-300 sm:hidden">
-                    Read Only
-                  </span>
-                </div>
+                <>
+                  <button
+                    onClick={() => setIsSettingsModalOpen(true)}
+                    className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-xl border border-white/30 dark:border-gray-700/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors"
+                    title="Account Settings"
+                  >
+                    <Settings className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-300" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline">Settings</span>
+                  </button>
+                  <button
+                    onClick={() => setIsApiKeyModalOpen(true)}
+                    className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-xl border border-white/30 dark:border-gray-700/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors"
+                    title="Manage API Keys"
+                  >
+                    <Key className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-300" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline">API Keys</span>
+                  </button>
+                </>
               )}
               <AuthButton />
             </div>
@@ -83,80 +89,58 @@ export default function Home() {
           </div>
         ) : (
           <>
-            {/* Tab Navigation */}
-            <div className="mb-4 sm:mb-6 lg:mb-8">
-              <div className="bg-white/10 dark:bg-gray-800/10 backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-1 sm:p-2 shadow-2xl border border-white/20 dark:border-gray-700/20">
-                <nav className="flex space-x-1 sm:space-x-2">
-                  <button
-                    onClick={() => setActiveTab('images')}
-                    className={`flex-1 py-2 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6 rounded-xl sm:rounded-2xl font-semibold text-xs sm:text-sm flex items-center justify-center space-x-1 sm:space-x-2 transition-all duration-500 relative overflow-hidden group ${
-                  activeTab === 'images'
-                    ? 'bg-gradient-to-r from-blue-600/90 to-indigo-600/90 text-white shadow-2xl transform scale-105'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/20 dark:hover:bg-gray-700/20'
-                    }`}
-                  >
-                    <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden xs:inline">Images</span>
-                    <span className="xs:hidden">IMG</span>
-                    {activeTab === 'images' && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    )}
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('files')}
-                    className={`flex-1 py-2 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6 rounded-xl sm:rounded-2xl font-semibold text-xs sm:text-sm flex items-center justify-center space-x-1 sm:space-x-2 transition-all duration-500 relative overflow-hidden group ${
-                      activeTab === 'files'
-                        ? 'bg-gradient-to-r from-blue-600/90 to-indigo-600/90 text-white shadow-2xl transform scale-105'
-                        : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/20 dark:hover:bg-gray-700/20'
-                    }`}
-                  >
-                    <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden xs:inline">Files</span>
-                    <span className="xs:hidden">DOC</span>
-                    {activeTab === 'files' && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    )}
-                  </button>
-                </nav>
-              </div>
-            </div>
-
-            {/* File Manager */}
-            <div className="bg-white/10 dark:bg-gray-800/10 backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20 overflow-hidden relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent dark:from-gray-700/5" />
-              <FileManager type={activeTab} isReadOnly={!isAuthenticated} />
-            </div>
-
-            {/* URL Examples */}
-            <div className="mt-4 sm:mt-6 lg:mt-8 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 dark:from-blue-600/10 dark:to-indigo-600/10 backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-blue-200/30 dark:border-blue-700/30 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent dark:from-gray-700/10" />
-              <div className="relative">
-                <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
-                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full animate-pulse"></div>
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">CDN URL Format</h3>
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                  <div className="space-y-2 sm:space-y-3">
-                    <div className="flex items-center space-x-2 sm:space-x-3">
-                      <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-                      <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200">Images:</span>
-                    </div>
-                    <code className="block text-xs sm:text-sm text-gray-800 dark:text-gray-200 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl border border-white/30 dark:border-gray-700/30 font-mono break-all">
-                      https://cdn.hv6.dev/images/path/to/image.png
-                    </code>
-                  </div>
-                  <div className="space-y-2 sm:space-y-3">
-                    <div className="flex items-center space-x-2 sm:space-x-3">
-                      <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
-                      <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200">Files:</span>
-                    </div>
-                    <code className="block text-xs sm:text-sm text-gray-800 dark:text-gray-200 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl border border-white/30 dark:border-gray-700/30 font-mono break-all">
-                      https://cdn.hv6.dev/files/path/to/file.pdf
-                    </code>
-                  </div>
+            {/* Tab Navigation - Only show when authenticated */}
+            {isAuthenticated && (
+              <div className="mb-4 sm:mb-6 lg:mb-8">
+                <div className="bg-white/10 dark:bg-gray-800/10 backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-1 sm:p-2 shadow-2xl border border-white/20 dark:border-gray-700/20">
+                  <nav className="flex space-x-1 sm:space-x-2">
+                    <button
+                      onClick={() => setActiveTab('images')}
+                      className={`flex-1 py-2 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6 rounded-xl sm:rounded-2xl font-semibold text-xs sm:text-sm flex items-center justify-center space-x-1 sm:space-x-2 transition-all duration-500 relative overflow-hidden group ${
+                    activeTab === 'images'
+                      ? 'bg-gradient-to-r from-blue-600/90 to-indigo-600/90 text-white shadow-2xl transform scale-105'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/20 dark:hover:bg-gray-700/20'
+                      }`}
+                    >
+                      <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="hidden xs:inline">Images</span>
+                      <span className="xs:hidden">IMG</span>
+                      {activeTab === 'images' && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('files')}
+                      className={`flex-1 py-2 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6 rounded-xl sm:rounded-2xl font-semibold text-xs sm:text-sm flex items-center justify-center space-x-1 sm:space-x-2 transition-all duration-500 relative overflow-hidden group ${
+                        activeTab === 'files'
+                          ? 'bg-gradient-to-r from-blue-600/90 to-indigo-600/90 text-white shadow-2xl transform scale-105'
+                          : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/20 dark:hover:bg-gray-700/20'
+                      }`}
+                    >
+                      <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="hidden xs:inline">Files</span>
+                      <span className="xs:hidden">DOC</span>
+                      {activeTab === 'files' && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      )}
+                    </button>
+                  </nav>
                 </div>
               </div>
-                    </div>
+            )}
+
+            {/* File Manager or Onboarding */}
+            {isAuthenticated ? (
+              <div className="bg-white/10 dark:bg-gray-800/10 backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20 overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent dark:from-gray-700/5" />
+                <FileManager type={activeTab} isReadOnly={false} />
+              </div>
+            ) : (
+              <div className="bg-white/10 dark:bg-gray-800/10 backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20 overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent dark:from-gray-700/5 pointer-events-none" />
+                <OnboardingPrompt />
+              </div>
+            )}
                   </>
                 )}
               </main>
@@ -169,13 +153,27 @@ export default function Home() {
                       <div className="flex items-center space-x-2">
                         <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full animate-pulse"></div>
                         <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">
-                          © {new Date().getFullYear()} hv6.dev
+                          © {new Date().getFullYear()}{' '}
+                          <a
+                            href="https://hv6.dev"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors animate-blink"
+                          >
+                            hv6.dev
+                          </a>
                         </span>
                       </div>
                     </div>
                   </div>
                 </div>
       </footer>
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+      />
 
       {/* API Key Management Modal */}
       <ApiKeyModal 

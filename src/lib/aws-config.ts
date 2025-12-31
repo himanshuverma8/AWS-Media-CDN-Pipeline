@@ -1,4 +1,4 @@
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 //aws configuration
@@ -29,4 +29,9 @@ export async function generatePresignedUrl(key: string, expiresIn: number = 3600
 
     return await getSignedUrl(s3Client, command, { expiresIn });
 }
+
+//storage limit
+export const USER_STORAGE_LIMIT = 50*1024*1024; //50mb
+export const GLOBAL_STORAGE_LIMIT = 4.8*1024*1024*1024; //4.8gb
+
 
