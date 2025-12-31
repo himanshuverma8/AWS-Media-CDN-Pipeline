@@ -4,7 +4,6 @@ import {eq, and, desc} from "drizzle-orm";
 import { randomBytes } from 'crypto';
 import { users, userFiles, type UserFile, type User as DbUser } from './schema'
 import { GLOBAL_STORAGE_LIMIT, USER_STORAGE_LIMIT } from '../aws-config';
-import { Files } from 'lucide-react';
 
 //create drizzle db instance
 const sql = neon(process.env.DATABASE_URL!);

@@ -1,10 +1,9 @@
 import { NextRequest } from "next/server";
-import { getUserByApiKey } from "./db";
-import { createHmac } from "crypto";
+import { getUserByApiKey, type User } from "./db";
 
 export interface ApiAuthResult {
     authenticated: boolean;
-    user?: any;
+    user?: User;
     error?: string;
 }
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { 
   X, 
   Settings, 
@@ -149,10 +150,12 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-700 rounded-xl p-4 sm:p-6">
                 <div className="flex items-start space-x-4">
                   {data.user.avatar ? (
-                    <img
+                    <Image
                       src={data.user.avatar}
                       alt={data.user.name}
-                      className="w-16 h-16 rounded-full border-4 border-white dark:border-gray-700 shadow-lg"
+                      width={64}
+                      height={64}
+                      className="w-16 h-16 rounded-full border-4 border-white dark:border-gray-700 shadow-lg object-cover"
                     />
                   ) : (
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center border-4 border-white dark:border-gray-700 shadow-lg">
