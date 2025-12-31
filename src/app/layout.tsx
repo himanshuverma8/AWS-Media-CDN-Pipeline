@@ -19,20 +19,20 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "https://cdn.hv6.dev/images/logos/lighting_thunderbolt_red.jpg?height=32&width=32",
+        url: "https://cdn.hv6.dev/images/logos/lighting_thunderbolt_red.jpg_circular.png?height=100&width=100",
         sizes: "32x32",
         type: "image/jpeg",
       },
       {
-        url: "https://cdn.hv6.dev/images/logos/lighting_thunderbolt_red.jpg?height=16&width=16",
+        url: "https://cdn.hv6.dev/images/logos/lighting_thunderbolt_red.jpg_circular.png?height=100&width=100",
         sizes: "16x16",
         type: "image/jpeg",
       },
     ],
-    shortcut: "https://cdn.hv6.dev/images/logos/lighting_thunderbolt_red.jpg?height=32&width=32",
+    shortcut: "https://cdn.hv6.dev/images/logos/lighting_thunderbolt_red.jpg_circular.png?height=100&width=100",
     apple: [
       {
-        url: "https://cdn.hv6.dev/images/logos/lighting_thunderbolt_red.jpg?height=180&width=180",
+        url: "https://cdn.hv6.dev/images/logos/lighting_thunderbolt_red.jpg_circular.png?height=100&width=100",
         sizes: "180x180",
         type: "image/jpeg",
       },
