@@ -15,8 +15,6 @@ import {
   Zap,
   Shield,
   Globe,
-  Code,
-  Terminal,
   ExternalLink
 } from 'lucide-react';
 
@@ -409,7 +407,7 @@ export default function DocsPage() {
                     <div>
                       <h3 className="text-lg font-semibold text-white mb-2">Generate API Credentials</h3>
                       <p className="text-slate-300 mb-4">
-                        To get your API key, go to the Dashboard and click on "API Keys" button. 
+                        To get your API key, go to the Dashboard and click on &quot;API Keys&quot; button. 
                         Your API secret will only be shown once, so save it securely.
                       </p>
                       <Link

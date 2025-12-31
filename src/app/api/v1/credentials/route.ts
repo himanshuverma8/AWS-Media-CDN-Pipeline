@@ -1,12 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getOrCreateUser, generateApiCredentials, getApiCredentials, revokeApiCredentials
  } from "@/lib/db";
-import { error } from "console";
 
  //get api credentials 
- export async function GET(request: NextRequest) {
+ export async function GET() {
     const session = await getServerSession(authOptions);
     if(!session?.user?.email) {
         return NextResponse.json({error: 'Unauthorized'}, {status: 401});
@@ -18,6 +17,13 @@ import { error } from "console";
             session.user.name || 'User'
         );
 
+        if (!user) {
+            return NextResponse.json(
+                {error: 'Failed to get user'},
+                {status: 500}
+            );
+        }
+
         const credentials = await getApiCredentials(user.id);
 
         return NextResponse.json({
@@ -25,16 +31,16 @@ import { error } from "console";
             apiKey: credentials?.apiKey || null,
             hasSecret: !!credentials?.apiSecret
         })
-    } catch (error) {
+    } catch {
         return NextResponse.json(
-            {error: 'Fialed to get credentials'},
+            {error: 'Failed to get credentials'},
             {status: 500}
         );
     }
  }
 
  //post generate new api credentials
- export async function POST(request:NextRequest) {
+ export async function POST() {
     const session = await getServerSession(authOptions);
     if(!session?.user?.email) {
         return NextResponse.json({error: 'Unauthorized'}, {status: 401});
@@ -45,6 +51,13 @@ import { error } from "console";
             session.user.email,
             session.user.name || 'User'
         )
+
+        if (!user) {
+            return NextResponse.json(
+                {error: 'Failed to get user'},
+                {status: 500}
+            );
+        }
 
         const { apiKey, apiSecret} = await generateApiCredentials(user.id);
 
@@ -55,7 +68,7 @@ import { error } from "console";
             apiSecret,
             message: 'Save your api secret securely. It will not be shown again.',
         });
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             {error: 'Failed to generate credentials'},
             {status: 500}
@@ -64,17 +77,24 @@ import { error } from "console";
  }
 
  //delete -> revoke api credentials
- export async function DELETE(request: NextRequest) {
+ export async function DELETE() {
     const session = await getServerSession(authOptions);
     if(!session?.user?.email){
         return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
     try {
-        const user = getOrCreateUser(
+        const user = await getOrCreateUser(
             session.user.email,
             session.user.name || 'User'
         );
+
+        if (!user) {
+            return NextResponse.json(
+                {error: 'Failed to get user'},
+                {status: 500}
+            );
+        }
 
         await revokeApiCredentials(user.id);
 
@@ -82,11 +102,11 @@ import { error } from "console";
             success: true,
             message: 'API credentials revoked successfully',
         }); 
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             {error: 'Failed to revoke credentials'},
             {status: 500}
         )
     }
     
- }
+}

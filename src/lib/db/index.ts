@@ -136,13 +136,33 @@ export async function deleteUserFile(fileId: string, userId: string): Promise<bo
 
     return result.length > 0;
 }
+
+export async function deleteUserFileByS3Key(s3Key: string, userId: string): Promise<boolean> {
+    const result = await db.delete(userFiles)
+        .where(and(eq(userFiles.s3Key, s3Key), eq(userFiles.userId, userId)))
+        .returning();
+
+    return result.length > 0;
+}
+
+export async function updateUserFileS3Key(oldKey: string, newKey: string, newFileName: string, userId: string): Promise<boolean> {
+    const result = await db.update(userFiles)
+        .set({
+            s3Key: newKey,
+            fileName: newFileName,
+        })
+        .where(and(eq(userFiles.s3Key, oldKey), eq(userFiles.userId, userId)))
+        .returning();
+
+    return result.length > 0;
+}
 export interface UserStats {
     totalFiles: number;
     totalImages: number;
     totalDocuments: number;
     totalStorageBytes: number;
     hasApiKey: boolean;
-    apikeyCreatedAt: Date | null;
+    apiKeyCreatedAt: Date | null;
 }
 
 export async function getUserStats(userId: string): Promise<UserStats> {
@@ -175,7 +195,7 @@ export async function getUserStats(userId: string): Promise<UserStats> {
         totalDocuments,
         totalStorageBytes,
         hasApiKey: !!userData?.apiKey,
-        apikeyCreatedAt: userData?.apiKeyCreatedAt || null
+        apiKeyCreatedAt: userData?.apiKeyCreatedAt || null
     }
 }
 

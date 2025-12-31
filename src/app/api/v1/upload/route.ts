@@ -3,7 +3,6 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { s3Client, BUCKET_NAME, generateCDNUrl} from '@/lib/aws-config';
 import { verifyApiAuth } from '@/lib/api-auth';
 import { checkStorageLimits, createUserFile } from '@/lib/db';
-import { error } from 'console';
 
 export async function POST(request: NextRequest) {
     //verify api key
@@ -88,8 +87,8 @@ export async function POST(request: NextRequest) {
             }
         });
         
-    } catch (error) {
-        console.error('Upload error:', error);
+    } catch (err) {
+        console.error('Upload error:', err);
         return NextResponse.json(
             { error: 'Failed to upload file' },
             { status: 500 }

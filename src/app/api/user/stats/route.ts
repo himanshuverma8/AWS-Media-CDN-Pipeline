@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { getOrCreateUser, getUserStats } from '@/lib/db';
-import { error } from 'console';
 
 // Helper function to format bytes
 function formatBytes(bytes: number): string {
@@ -54,7 +53,7 @@ export async function GET() {
                     totalStorageBytes: stats.totalStorageBytes,
                     totalStorageFormatted: formatBytes(stats.totalStorageBytes),
                     hasApiKey: stats.hasApiKey,
-                    apiKeyCreatedAt: stats.apikeyCreatedAt
+                    apiKeyCreatedAt: stats.apiKeyCreatedAt
                 }
             }
         )
