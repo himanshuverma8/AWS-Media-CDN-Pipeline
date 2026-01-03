@@ -104,29 +104,29 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-300 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700 animate-in zoom-in-95 duration-300">
+    <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-300 p-2 sm:p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-2xl w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700 animate-in zoom-in-95 duration-300">
         {/* Header */}
-        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4 flex items-center justify-between z-10">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
-              <Settings className="w-5 h-5 text-white" />
+        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 flex items-center justify-between z-10">
+          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+              <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Account Settings</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">View your account details and usage</p>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-white truncate">Account Settings</h2>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 hidden sm:block">View your account details and usage</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-1.5 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex-shrink-0 ml-2"
           >
-            <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+            <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-4 sm:p-6 space-y-6">
+        <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
@@ -147,34 +147,34 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           ) : data && (
             <>
               {/* User Profile Section */}
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-700 rounded-xl p-4 sm:p-6">
-                <div className="flex items-start space-x-4">
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-700 rounded-lg sm:rounded-xl p-3 sm:p-4 lg:p-6">
+                <div className="flex items-start space-x-3 sm:space-x-4">
                   {data.user.avatar ? (
                     <Image
                       src={data.user.avatar}
                       alt={data.user.name}
                       width={64}
                       height={64}
-                      className="w-16 h-16 rounded-full border-4 border-white dark:border-gray-700 shadow-lg object-cover"
+                      className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-full border-2 sm:border-4 border-white dark:border-gray-700 shadow-lg object-cover flex-shrink-0"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center border-4 border-white dark:border-gray-700 shadow-lg">
-                      <User className="w-8 h-8 text-white" />
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center border-2 sm:border-4 border-white dark:border-gray-700 shadow-lg flex-shrink-0">
+                      <User className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" />
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white truncate">
+                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-white truncate">
                       {data.user.name}
                     </h3>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <Mail className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                      <span className="text-sm text-gray-600 dark:text-gray-300 truncate">
+                    <div className="flex items-center space-x-1.5 sm:space-x-2 mt-1">
+                      <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 truncate">
                         {data.user.email}
                       </span>
                     </div>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <Calendar className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                      <span className="text-sm text-gray-600 dark:text-gray-300">
+                    <div className="flex items-center space-x-1.5 sm:space-x-2 mt-1">
+                      <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                         Member since {formatDate(data.user.createdAt)}
                       </span>
                     </div>
@@ -183,25 +183,25 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </div>
 
               {/* Storage Usage */}
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4 sm:p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <HardDrive className="w-5 h-5 text-white" />
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg sm:rounded-xl p-3 sm:p-4 lg:p-6">
+                <div className="flex items-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <HardDrive className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">Storage Usage</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Your current storage consumption</p>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white">Storage Usage</h3>
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 hidden sm:block">Your current storage consumption</p>
                   </div>
                 </div>
                 
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                <div className="space-y-2 sm:space-y-3">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <span className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                       {data.stats.totalStorageFormatted}
                     </span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">of 50 MB</span>
+                    <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">of 50 MB</span>
                   </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 sm:h-3 overflow-hidden">
                     <div
                       className="bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-500"
                       style={{ width: `${getStoragePercentage(data.stats.totalStorageBytes)}%` }}
@@ -214,35 +214,35 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </div>
 
               {/* File Statistics */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl p-4 text-center">
-                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mx-auto mb-3">
-                    <Database className="w-6 h-6 text-white" />
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
+                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg sm:rounded-xl p-2 sm:p-3 lg:p-4 text-center">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-green-600 rounded-lg flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                    <Database className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
                   </div>
-                  <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+                  <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-green-600 dark:text-green-400">
                     {data.stats.totalFiles}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Total Files</div>
+                  <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1">Total Files</div>
                 </div>
 
-                <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl p-4 text-center">
-                  <div className="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center mx-auto mb-3">
-                    <ImageIcon className="w-6 h-6 text-white" />
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-lg sm:rounded-xl p-2 sm:p-3 lg:p-4 text-center">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-emerald-600 rounded-lg flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                    <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
                   </div>
-                  <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+                  <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-emerald-600 dark:text-emerald-400">
                     {data.stats.totalImages}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Images</div>
+                  <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1">Images</div>
                 </div>
 
-                <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-xl p-4 text-center">
-                  <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center mx-auto mb-3">
-                    <FileText className="w-6 h-6 text-white" />
+                <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-lg sm:rounded-xl p-2 sm:p-3 lg:p-4 text-center">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-orange-600 rounded-lg flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                    <FileText className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
                   </div>
-                  <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+                  <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-orange-600 dark:text-orange-400">
                     {data.stats.totalDocuments}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">Documents</div>
+                  <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1">Documents</div>
                 </div>
               </div>
 
@@ -313,10 +313,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         </div>
 
         {/* Footer */}
-        <div className="sticky bottom-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4">
+        <div className="sticky bottom-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
           <button
             onClick={onClose}
-            className="w-full px-4 py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl font-semibold transition-colors"
+            className="w-full px-4 py-2.5 sm:py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-colors"
           >
             Close
           </button>

@@ -132,29 +132,29 @@ export default function ApiKeyModal({ isOpen, onClose }: ApiKeyModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-300 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700 animate-in zoom-in-95 duration-300">
+    <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-300 p-2 sm:p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-2xl w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700 animate-in zoom-in-95 duration-300">
         {/* Header */}
-        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4 flex items-center justify-between z-10">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
-              <Key className="w-5 h-5 text-white" />
+        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 flex items-center justify-between z-10">
+          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+              <Key className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">API Credentials</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Manage your API keys for programmatic access</p>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-white truncate">API Credentials</h2>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 hidden sm:block">Manage your API keys for programmatic access</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-1.5 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex-shrink-0 ml-2"
           >
-            <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+            <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-4 sm:p-6 space-y-6">
+        <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
@@ -163,69 +163,69 @@ export default function ApiKeyModal({ isOpen, onClose }: ApiKeyModalProps) {
             <>
               {/* New Credentials (shown only after generation) */}
               {newCredentials && (
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-700 rounded-xl p-4 sm:p-6 space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <AlertCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-green-900 dark:text-green-100 mb-1">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-700 rounded-lg sm:rounded-xl p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4">
+                  <div className="flex items-start space-x-2 sm:space-x-3">
+                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm sm:text-base font-semibold text-green-900 dark:text-green-100 mb-1">
                         New API Credentials Generated
                       </h3>
-                      <p className="text-sm text-green-700 dark:text-green-300">
+                      <p className="text-xs sm:text-sm text-green-700 dark:text-green-300">
                         Save your API Secret now - it will not be shown again!
                       </p>
                     </div>
                   </div>
 
                   {/* API Key */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-green-900 dark:text-green-100">API Key</label>
-                    <div className="flex items-center space-x-2">
-                      <code className="flex-1 bg-white dark:bg-gray-800 px-4 py-3 rounded-lg border border-green-200 dark:border-green-700 text-sm font-mono break-all">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <label className="text-xs sm:text-sm font-medium text-green-900 dark:text-green-100">API Key</label>
+                    <div className="flex items-center space-x-1.5 sm:space-x-2">
+                      <code className="flex-1 bg-white dark:bg-gray-800 px-2 sm:px-3 lg:px-4 py-2 sm:py-2.5 lg:py-3 rounded-lg border border-green-200 dark:border-green-700 text-xs sm:text-sm font-mono break-all overflow-x-auto">
                         {newCredentials.apiKey}
                       </code>
                       <button
                         onClick={() => copyToClipboard(newCredentials.apiKey, 'key')}
-                        className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                        className="p-1.5 sm:p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex-shrink-0"
                         title="Copy API Key"
                       >
                         {copied === 'key' ? (
-                          <Check className="w-5 h-5" />
+                          <Check className="w-4 h-4 sm:w-5 sm:h-5" />
                         ) : (
-                          <Copy className="w-5 h-5" />
+                          <Copy className="w-4 h-4 sm:w-5 sm:h-5" />
                         )}
                       </button>
                     </div>
                   </div>
 
                   {/* API Secret */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-green-900 dark:text-green-100">API Secret</label>
-                    <div className="flex items-center space-x-2">
-                      <div className="flex-1 relative">
-                        <code className="block w-full bg-white dark:bg-gray-800 px-4 py-3 rounded-lg border border-green-200 dark:border-green-700 text-sm font-mono break-all">
-                          {showSecret ? newCredentials.apiSecret : '•'.repeat(64)}
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <label className="text-xs sm:text-sm font-medium text-green-900 dark:text-green-100">API Secret</label>
+                    <div className="flex items-center space-x-1.5 sm:space-x-2">
+                      <div className="flex-1 relative min-w-0">
+                        <code className="block w-full bg-white dark:bg-gray-800 px-2 sm:px-3 lg:px-4 py-2 sm:py-2.5 lg:py-3 rounded-lg border border-green-200 dark:border-green-700 text-xs sm:text-sm font-mono break-all overflow-x-auto pr-8 sm:pr-10">
+                          {showSecret ? newCredentials.apiSecret : '•'.repeat(32)}
                         </code>
                         <button
                           onClick={() => setShowSecret(!showSecret)}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                          className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 p-1 sm:p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
                           title={showSecret ? 'Hide Secret' : 'Show Secret'}
                         >
                           {showSecret ? (
-                            <EyeOff className="w-4 h-4 text-gray-500" />
+                            <EyeOff className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-500" />
                           ) : (
-                            <Eye className="w-4 h-4 text-gray-500" />
+                            <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-500" />
                           )}
                         </button>
                       </div>
                       <button
                         onClick={() => copyToClipboard(newCredentials.apiSecret, 'secret')}
-                        className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                        className="p-1.5 sm:p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex-shrink-0"
                         title="Copy API Secret"
                       >
                         {copied === 'secret' ? (
-                          <Check className="w-5 h-5" />
+                          <Check className="w-4 h-4 sm:w-5 sm:h-5" />
                         ) : (
-                          <Copy className="w-5 h-5" />
+                          <Copy className="w-4 h-4 sm:w-5 sm:h-5" />
                         )}
                       </button>
                     </div>
@@ -275,38 +275,39 @@ export default function ApiKeyModal({ isOpen, onClose }: ApiKeyModalProps) {
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <button
                       onClick={generateCredentials}
                       disabled={isGenerating}
-                      className="flex-1 flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-blue-400 disabled:to-indigo-400 text-white rounded-xl font-semibold transition-all duration-200 disabled:cursor-not-allowed"
+                      className="flex-1 flex items-center justify-center space-x-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-blue-400 disabled:to-indigo-400 text-white rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all duration-200 disabled:cursor-not-allowed"
                     >
                       {isGenerating ? (
                         <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                           <span>Generating...</span>
                         </>
                       ) : (
                         <>
-                          <Key className="w-5 h-5" />
-                          <span>Generate New Credentials</span>
+                          <Key className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span className="hidden sm:inline">Generate New Credentials</span>
+                          <span className="sm:hidden">Generate New</span>
                         </>
                       )}
                     </button>
                     <button
                       onClick={revokeCredentials}
                       disabled={isRevoking}
-                      className="flex items-center justify-center space-x-2 px-4 py-3 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-xl font-semibold transition-all duration-200 disabled:cursor-not-allowed"
+                      className="flex items-center justify-center space-x-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all duration-200 disabled:cursor-not-allowed"
                     >
                       {isRevoking ? (
                         <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                           <span>Revoking...</span>
                         </>
                       ) : (
                         <>
-                          <Trash2 className="w-5 h-5" />
-                          <span className="hidden sm:inline">Revoke</span>
+                          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span>Revoke</span>
                         </>
                       )}
                     </button>
@@ -378,6 +379,10 @@ export default function ApiKeyModal({ isOpen, onClose }: ApiKeyModalProps) {
     </div>
   );
 }
+
+
+
+
 
 
 

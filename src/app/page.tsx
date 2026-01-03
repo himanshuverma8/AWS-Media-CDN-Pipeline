@@ -43,32 +43,32 @@ export default function Home() {
                 </h1>
               </div>
             </div>
-            <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+            <div className="flex items-center space-x-1.5 sm:space-x-2 lg:space-x-3 flex-shrink-0">
               <Link
                 href="/docs"
-                className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-xl border border-white/30 dark:border-gray-700/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors"
+                className="flex items-center justify-center w-8 h-8 sm:w-auto sm:px-2 lg:px-3 sm:py-1.5 lg:py-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-lg sm:rounded-xl border border-white/30 dark:border-gray-700/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors"
                 title="API Documentation"
               >
-                <Book className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-300" />
-                <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline">Docs</span>
+                <Book className="w-4 h-4 sm:w-3 lg:w-4 sm:h-3 lg:h-4 text-gray-600 dark:text-gray-300" />
+                <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline ml-1 lg:ml-2">Docs</span>
               </Link>
               {isAuthenticated && (
                 <>
                   <button
                     onClick={() => setIsSettingsModalOpen(true)}
-                    className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-xl border border-white/30 dark:border-gray-700/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors"
+                    className="flex items-center justify-center w-8 h-8 sm:w-auto sm:px-2 lg:px-3 sm:py-1.5 lg:py-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-lg sm:rounded-xl border border-white/30 dark:border-gray-700/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors"
                     title="Account Settings"
                   >
-                    <Settings className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-300" />
-                    <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline">Settings</span>
+                    <Settings className="w-4 h-4 sm:w-3 lg:w-4 sm:h-3 lg:h-4 text-gray-600 dark:text-gray-300" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline ml-1 lg:ml-2">Settings</span>
                   </button>
                   <button
                     onClick={() => setIsApiKeyModalOpen(true)}
-                    className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-xl border border-white/30 dark:border-gray-700/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors"
+                    className="flex items-center justify-center w-8 h-8 sm:w-auto sm:px-2 lg:px-3 sm:py-1.5 lg:py-2 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-lg sm:rounded-xl border border-white/30 dark:border-gray-700/30 hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors"
                     title="Manage API Keys"
                   >
-                    <Key className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-300" />
-                    <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline">API Keys</span>
+                    <Key className="w-4 h-4 sm:w-3 lg:w-4 sm:h-3 lg:h-4 text-gray-600 dark:text-gray-300" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline ml-1 lg:ml-2">API Keys</span>
                   </button>
                 </>
               )}
