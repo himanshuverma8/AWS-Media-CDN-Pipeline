@@ -1,5 +1,7 @@
 # CDN Control Panel
 
+to implement
+realtime image transformations and image generations using llm rest api endpoint 
 
 to implement
 elastic search to find files 
